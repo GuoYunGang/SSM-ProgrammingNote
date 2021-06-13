@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- spEL测试 -->
+<bean id="book01" class="com.spring.beans.Book">
+	<property name="bookName" value="白鹿原"></property>
+</bean>
+
+
+<bean id="car02" class="com.spring.beans.Car">
+	<property name="carName" value="奔驰E"></property>
+	<property name="color" value="黑色"></property>
+</bean>
+
+<!-- 利用spEL表达式为属性赋值 -->
+
+<bean id="person01" class="com.spring.beans.Person">
+	<!-- 基本运算 -->
+	 <property name="salary" value="#{112.2*2.3}"></property>
+	 <!-- bean中的属性 -->
+	 <property name="name" value="#{book01.bookName}"></property>
+	 <!-- 直接调用一个bean 类似于ref -->
+	 <property name="car" value="#{car02}"></property>
+	 <!-- 调用静态方法  #{T(静态类名).方法} -->
+	 <property name="email" value="#{T(java.util.UUID).randomUUID().toString()}"></property>
+	 <!-- 调用动态方法   -->
+	 <property name="sex" value="#{book01.getBookName()}"></property>
+</bean>
+
+</beans>

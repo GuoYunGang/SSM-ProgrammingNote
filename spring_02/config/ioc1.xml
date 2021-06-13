@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 设置bean的生命周期
+destory-method：结束调用的方法
+init-method：起始时调用的方法
+ -->
+<bean id="book01" class="com.spring.beans.Book" destroy-method="myDestory" init-method="myInit"></bean>
+
+<!-- 测试bean的后置处理器 
+
+-->
+<bean id="beanPostProcessor" class="com.spring.beans.MyBeanPostProcessor"></bean>
+</beans>

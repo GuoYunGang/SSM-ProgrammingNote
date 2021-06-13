@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 基于XML的自动装配 -->
+<!-- 该自动装配仅限于自定义类型的属性，对于常属性不行，如age name -->
+
+<!-- <bean id="car" class="com.spring.beans.Car">
+	<property name="carName" value="五菱"></property>
+	<property name="color" value="银色"></property>
+</bean>
+
+<bean id="car01" class="com.spring.beans.Car">
+	<property name="carName" value="宝马"></property>
+	<property name="color" value="白色"></property>
+</bean> -->
+
+<bean id="car02" class="com.spring.beans.Car">
+	<property name="carName" value="奔驰"></property>
+	<property name="color" value="黑色"></property>
+</bean>
+
+<!-- 为bean实现自动装配 
+所用参数：autowire
+autowire="default"   手动装配
+
+autowire="byName"  以属性名作为id进行查找装配
+	当只有一个属性id1的时候   直接赋值
+	当没有符合的属性id的时候，赋值为null
+	当有多个时，直接报错，原因：id不唯一
+	
+autowire="byType"  以属性类别进行查找
+	
+	当只有一个的时候，自动填充
+	当没有的时候，赋值为null
+	当xml中存在多个符合要求的属性的时候报错，属性不唯一
+	org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type [com.spring.beans.Car] is defined: expected single matching bean but found 3: car,car01,car02
+	
+	
+autowire="constructor" 按照构造器进行自动填充
+首先在bean中应该存在单属性的构造器
+	当没有符合要求的属性的时候，赋值为null	
+	当只有一个的时候，直接填充
+	当xml中存在多个符合要去的属性的时候，
+	基于构造器的自动填充会1根据基于属性名作为id进行选择，如果没有则赋值为null，如果有就填充
+	不会报错
+如果没有构造器，则直接赋值为null
+
+-->
+
+
+
+<bean id="person01" class="com.spring.beans.Person" autowire="byType">
+	
+</bean>
+
+<!-- 如果bean中存在列表  如list<Book> 
+	则会将容器中所有的该bean，如Book,封装成list进行赋值
+-->
+
+<bean id="book01" class="com.spring.beans.Book">
+	<property name="bookName" value="book1"></property>
+</bean>
+
+<bean id="book02" class="com.spring.beans.Book">
+	<property name="bookName" value="book2"></property>
+</bean>
+
+<bean id="book03" class="com.spring.beans.Book">
+	<property name="bookName" value="book3"></property>
+</bean>
+
+<bean id="book04" class="com.spring.beans.Book">
+	<property name="bookName" value="book4"></property>
+</bean>
+
+
+
+
+
+</beans>
