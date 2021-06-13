@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- 通过无参构造并指定属性进行赋值  -->
+<bean id="person01" class="com.spring.beans.Person">
+	<property name="name" value="张三"></property>
+	<property name="age" value="18"></property>
+	<property name="sex" value="男"></property>
+	<property name="email" value="133@qq.com"></property>
+</bean>
+
+<!-- 通过有参构造并指定属性进行赋值  -->
+<bean id="person03" class="com.spring.beans.Person">
+	<constructor-arg name="name" value="小明"></constructor-arg>
+	<constructor-arg name="sex" value="男"></constructor-arg>
+	<constructor-arg name="age" value="30"></constructor-arg>
+	<constructor-arg name="email" value="xioaming@136.com"></constructor-arg>
+</bean>
+
+<!-- 通过有参构造不指定属性进行赋值，但是需要按照构造函数的参数顺序赋值 -->
+<!-- Person(String name, int age, String sex, String email) -->
+<!-- 重载情况下type可以指定参数的类型 -->
+<bean id="person04" class="com.spring.beans.Person">
+	<constructor-arg value="小刚"></constructor-arg>
+	<constructor-arg value="20"></constructor-arg>
+	<constructor-arg value="男"></constructor-arg>
+	<constructor-arg value="xiaogang@qq.com"></constructor-arg>
+</bean>
+
+<!-- 通过p名称空间对bean进行赋值，导入p名称空间 -->
+<!-- 利用名称空间的作用是防止标签重复的 -->
+<bean id="person05" class="com.spring.beans.Person" 
+p:name="小哈" p:age="21" p:sex="女" p:email="xiaoha@wx.com"></bean>
+
+
+</beans>

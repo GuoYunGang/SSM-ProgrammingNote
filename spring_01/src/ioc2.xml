@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- 在容器中对多值属性进行赋值 -->
+
+<!-- 为一个car类进行赋值 -->
+<bean id="car01" class="com.spring.beans.Car">
+	<property name="carName" value="凯迪拉克"></property>
+	<property name="price" value="200000"></property>
+	<property name="color" value="black"></property>
+</bean>
+
+<!-- 为一个book类进行赋值 -->
+<bean id="book01" class="com.spring.beans.Book">
+	<property name="bookName" value="new程序员"></property>
+	<property name="author" value="程序员大牛"></property>
+</bean>
+
+<!-- 对多值的bean进行赋值 -->
+<bean id="person01" class="com.spring.beans.Person">
+	<!-- 引用赋值 -->
+<!-- 	<property name="car" ref="car01"></property> -->
+
+
+<!-- 通过bean来引用一个新的类对象，并且对其中的属性进行赋值 -->
+	<property name="car" >
+		<bean class="com.spring.beans.Car">
+			<property name="carName" value="五菱宏光"></property>
+			<property name="price" value="100"></property>
+		</bean>
+	</property>
+</bean>
+
+<!-- 为复杂属性进行赋值 -->
+<bean id="person02" class="com.spring.beans.Person">
+	<!-- 为list属性赋值 -->
+	<property name="books">
+	<!-- 为list属性赋值时需要使用到list标签 -->
+	<!-- 相当于new arraylist<Book>() -->
+		<list>
+		<!-- 其中存放写入到list中的类 -->
+			<bean class="com.spring.beans.Book" p:bookName="西游记" p:author="吴承恩"></bean>
+			<ref bean="book01"/>
+		</list>
+	</property>
+	<!-- 为map属性进行赋值 -->
+	<property name="maps">
+	<!-- 相当于创建了一个 new linkHashMap() -->
+		<map>
+		<!-- 一个entry就可以创建一个key和value -->
+			<entry key="key01" value="张三"></entry>
+			<entry key="key02" value-ref="car01"></entry>
+			<entry key="key03">
+				<bean class="com.spring.beans.Book" p:bookName="三国演义" p:author="罗贯中"></bean>
+			</entry>
+			
+		</map>
+	</property>
+	
+</bean>
+
+<!-- 级联属性对属性的属性进行赋值 -->
+<bean id="person03" class="com.spring.beans.Person">
+	<!-- 引用一个car属性，并对car中的属性进行重新赋值   -->
+	<property name="car" ref="car01"></property>
+	<property name="car.price" value="999"></property>
+
+</bean>
+
+
+<!-- 类继承 -->
+<!-- 如果只想让该bean被继承，而不能被引用的话，添加称为抽象bean  abstract="true"-->
+<bean id="person04" class="com.spring.beans.Person" abstract="true">
+	<property name="name" value="继承爸爸"></property>
+	<property name="sex" value="男"></property>
+	<property name="age" value="40"></property>
+	<property name="email" value="baba@qq.com"></property>
+</bean>
+
+<!-- 现在让新建立的类继承上面的类 -->
+<bean id="person05" class="com.spring.beans.Person" parent="person04">
+	<property name="name" value="继承儿子"></property>
+	<property name="age" value="20"></property>
+</bean>
+
+
+</beans>
+

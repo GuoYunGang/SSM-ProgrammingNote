@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 通过静态工厂方法创建airplane实例 
+	factory-method指定工厂方法名
+-->
+<bean id="airplane01" class="com.spring.factory.AirplaneStaticFactory" factory-method="getAirPlane">
+	<constructor-arg name="jzName" value="小王"></constructor-arg>
+</bean>
+
+<!-- 创建一个实例工厂 -->
+<bean id="airplaneInstanceFacatory" class="com.spring.factory.AirplaneInstanceFactory"></bean>
+
+<!-- 创建一个bean实例，调用实例工厂中的工厂方法 -->
+<bean id="airplane02" class="com.spring.beans.AirPlane" 
+factory-bean="airplaneInstanceFacatory" factory-method="getAirPlane"
+>
+	<constructor-arg name="jzName" value="实例机长01"></constructor-arg>
+</bean>
+
+<!-- 通过自定义的factoryBean来创建对象 -->
+<!-- 该bean只有在调用时才会被创建，容器创建时不会创建该bean -->
+<bean id="myFactoryBean" class="com.spring.factory.MyFactoryBeanImplements" ></bean>
+</beans>

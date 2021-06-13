@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 原来是按照容器中的顺序进行创建的 -->
+<!-- depends-on==""可以改变创建顺序 -->
+<bean id="person01" class="com.spring.beans.Person"></bean>
+<!-- <bean id="car01" class="com.spring.beans.Car" depends-on="book01,person01"></bean> -->
+<bean id="car01" class="com.spring.beans.Car"></bean>
+
+
+
+<!-- 测试bean的作用域 -->
+<!-- prototype多实例bean
+	1、在容器创建时不会被创建，
+	2、只有在被调用的时候才会被创建
+	3、可以存在多个实例
+ -->
+ <!-- singleton单实例bean
+ 	1、在容器创建时被创建
+ 	2、只有一个实例
+  -->
+<bean id="book01" class="com.spring.beans.Book" scope="prototype"></bean>
+<bean id="book02" class="com.spring.beans.Book" scope="singleton"></bean>
+</beans>
