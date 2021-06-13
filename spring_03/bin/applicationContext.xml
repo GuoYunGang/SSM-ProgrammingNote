@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+<!-- 通过注解分别创建Dao，service，controller（控制器，控制网站的跳转逻辑）  
+	通过给bean添加注解，可以很容易的将bean加入到ioc中
+ 	 在某个类上添加任何一个注解都能将这个组件添加到ioc容器中 -->
+ 	 <!-- spring有四个可以使用的注解 
+ 	 	@controller 控制器层，
+ 	 	@service	业务逻辑层	
+ 	 	@Repository	数据库层
+ 	 	@Component	不属于以上三层
+ 	 	
+ 	 	以上的注解可以随便添加，spring底层并不会去进行判断
+ 	 	你所加注解的这个组件是否真的属于哪一层
+ 	 	
+ 	 	实现注解的三步：
+ 	 	1、添加context依赖
+ 	 		context:component-scan
+ 	 	2、为类添加相应的注解
+ 	 	3、导入aop包
+ 	 		spring-aop-4.0.0.RELEASE.jar
+ 	 		
+ 	 	在获取相应的组件时，使用的id就是类名的首字母小写
+ 	 -->
+ 	 <!-- context:component-scan 其中加入的参数是基础文件目录，
+ 	 spring会自动在该目录下搜索相应的bean -->
+<!--  	 <context:component-scan base-package="com.spring">
+ 	 	可以在注解中指定使用或排除那些组件
+ 	 	指定排除哪些组件，context:exclude-filter
+ 	 		使用之后组件图标右上角的小S就会消失
+ 	 		type="annotation" 指定要排除使用该注解的类
+ 	 			expression="" 写入注解的全类名
+ 	 			
+ 	 		type="assignable"	指定要排除的具体的类，
+ 	 		type="aspectj"	类的全类名
+ 	 		
+ 	 		几乎不用的三个
+ 	 		type="aspectj"  aspectj表达式
+ 	 		type="custom" 定义一个TypeFile，自己写一个类定义使用哪一个
+ 	 		type="regex" 利用正则表达式
+ 	 	
+			<context:exclude-filter type="assignable" expression="com.spring.service.BookService"/> 	 	
+ 	 	
+ 	 </context:component-scan> -->
+ 	 
+ 	 <!-- 指定只需要搜索哪些类 -->
+ 	  <!-- 指定需要包含哪些类context:include-filter 
+		type="annotation" 根据注解进行查找
+			  expression="" 写入注解的全类名	 
+			  担心需要注意的是：由于 context:component-scan默认是将所有的类全部都添加进去，
+			  所以在此基础上再添加是没有用的，需要在context:component-scan中加入属性参数
+			  use-default-filters="true" 表示默认将所有的类都添加进去
+			  false表示将所有的类都不添加进去
+			  
+			  同时可以添加多个context:include-filter
+			  其他属性是一样的
+ 	 -->
+ 	<!--  <context:component-scan base-package="com.spring" use-default-filters="false">
+ 	 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+ 	 </context:component-scan> -->
+ 	 
+ 	 <!-- 搜索添加所有的组件 测试@AutoWired自动装配-->
+ 	 <!-- 
+ 	 	@AutoWired的装配原理 
+ 	 	使用自动装配时，首先会根据类型去容器中查找相应的组件
+ 	 	类似于 getBean("bookService.class")
+ 	 	1、如果没有找到就抛异常
+ 	 	2、如果找到一个就赋值
+ 	 	3、如果找到多个，
+ 	 		1）、根据属性名作为ID进行继续寻找，
+ 	 			1>、找到对应属性名的组件就进行装配
+ 	 			2>、没有找到就报错
+ 	 				原因：使用变量名作为id进行匹配时候，没有找到对应的属性名
+ 	 				解决：使用@Qualifier("bookService")指定查找ID
+ 	 					1、找到就装配
+ 	 					2、找不到报错
+ 	 	解决报错：
+ 	 	@Autowired(required=false)
+ 	 	required=false表示如果实在找不到，就装配null
+ 	 		
+ 	 -->
+ 	 
+ 	 <context:component-scan base-package="com.spring">
+ 	 </context:component-scan>
+ 	 
+ 	 <!-- @autowried @Resource @Inject都是自动装配的注解
+ 	 	@autoWried是spring自带的，更强大一些，能够实现required=false
+ 	 	@Resource是java自带的，扩展性更强，所以如果切换成另一个容器框架，@Resource还是可以用的
+ 	  -->
+ 	 
+ 	 
+ 
+ 
+ 
+</beans>
