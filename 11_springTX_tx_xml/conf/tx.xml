@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 数据包扫描 -->
+	<context:component-scan base-package="com.spring"></context:component-scan>
+	
+	<!-- 0、引入外部配置文件 -->
+	<context:property-placeholder location="classpath:jdbcconfig.properties"/>
+	
+	<!-- 1、配置数据源 -->
+	<bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcurl}"></property>
+		<property name="driverClass" value="${jdbc.driverclass}"></property>
+		
+	</bean>
+	
+	<!-- 2、配置jdbcTemplate操作数据库 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" value="#{pooledDataSource}"></property>
+	</bean>
+	
+	<!-- 3、进行事务控制 -->
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 控制住数据源 -->
+		<property name="dataSource" value="#{pooledDataSource}"></property>
+	</bean>
+	
+	
+	<bean id="bookService" class="com.spring.service.BookService"></bean>
+	
+	
+	<!-- 基于xml配置的事务，依赖tx名称空间和aop名称空间
+		1）、Spring中提供事务管理器（事务切面），配置这个事务管理器
+		2）、配置出事务方法
+		3）、告诉Spring哪些方法是事务方法（事务切面将按照我们的切入点表达式去切事务方法）
+		
+	 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.spring.service.*.*(..))" id="txpoint"/>
+		<!-- 事务建议；advice-ref:指向事务管理器的配置 -->
+		<aop:advisor advice-ref="myAdvice" pointcut-ref="txpoint"/>
+	</aop:config>
+	
+	<!-- 配置事务管理器
+		transaction-manager="transactionManager" 指定是配置哪个事务管理器
+	 -->
+	<tx:advice id="myAdvice" transaction-manager="dataSourceTransactionManager">
+		<!-- 事务属性 -->
+		<tx:attributes>
+			<!-- 指明哪些方法是事务方法，
+				切入点表达式只是说，事务管理器要切入这些方法， -->
+			<!-- 指定所有的方法都是事务方法 -->
+			<tx:method name="*"/>
+			<!-- 仅仅指定一个方法是事务方法，并且指定事务的属性 -->
+			<tx:method name="buyBook" propagation="REQUIRED" timeout="-1"/>
+			<!-- 表示所有以get开头的方法 -->
+			<tx:method name="get*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	
+	<!-- 基于注解的和基于注解的都用，重要的使用注解，不重要的使用配置 -->
+</beans>
