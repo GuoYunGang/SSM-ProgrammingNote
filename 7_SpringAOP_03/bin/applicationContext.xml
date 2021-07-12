@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 通过配置文件实现切面 
+		1、将目标类和切面类加入到容器中 @component
+		2、声明哪个类是切面类，@Aspect
+		3、在配置文件中配置五个通知方法，告诉切面类中的方法都何时运行
+		4、开启基于注解的AOP功能
+	-->
+	
+	<!-- 将所需类加入到容器中 -->
+	<bean id="myCalculator" class="com.spring.inpl.MyMathCalculator"></bean>
+	<bean id="logUtil" class="com.spring.utils.LogUtli"></bean>
+	<bean id="SecondUtli" class="com.spring.utils.SecondUtli"></bean>
+	
+	<!-- 进行基于AOP的配置 -->
+	<!-- 当有两个切面类和一个环绕方法时，方法的执行是按照配置文件中配置的先后顺序执行的
+		配置在前的就会先执行，配置在后的就会后执行，但同时环绕方法进入之后就会先执行环绕方法
+	 -->
+	<aop:config>
+		<!-- 配置一个通用类 -->
+		<aop:pointcut expression="execution(public int com.spring.inpl.MyMathCalculator.*(int, int)))" id="myPoint"/>
+		<!-- 配置某一个指定的切面类 -->
+		<aop:aspect id="logUtil_Aspect" ref="logUtil">
+			<!-- 为具体的方法进行指定
+			method指定具体的方法名
+			pointcut指定具体要对应的方法
+			 -->
+			<aop:before method="LogStart" pointcut="execution(public int com.spring.inpl.MyMathCalculator.add(int, int))"/>
+			<aop:after-throwing method="LogThowing" pointcut="execution(public int com.spring.inpl.MyMathCalculator.*(int, int)))" throwing="e"/>
+			<aop:after-returning method="LogReturn" pointcut-ref="myPoint" returning="result"/>
+			<aop:after method="LogEnd" pointcut-ref="myPoint"/>
+			<!-- 定义一个环绕方法 -->
+			<aop:around method="MyAround" pointcut-ref="myPoint"/>
+		</aop:aspect>
+		
+		<!-- 定义第二个切面类 -->
+		<aop:aspect ref="SecondUtli">
+			<aop:before method="LogStart" pointcut="execution(public int com.spring.inpl.MyMathCalculator.*(..))"/>
+			<aop:after-throwing method="LogThowing" pointcut-ref="myPoint" throwing="e"/>
+			<aop:after method="LogEnd" pointcut-ref="myPoint"/>
+		</aop:aspect>
+		
+	</aop:config>
+	
+	
+	
+</beans>
