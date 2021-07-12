@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 添加外部配置文件 -->
+	<context:property-placeholder location="classpath:jdbcconfig.properties"/>
+
+	<!-- 进行包扫描
+	进行包扫描时注意一定要加入相应的jar包：spring-aop-4.0.0.RELEASE.jar
+	 -->
+	<context:component-scan base-package="com.spring"></context:component-scan>
+	
+	
+	<!-- 设置数据库配置 
+	在这里要注意：
+	$是用于读取配置文件中的信息
+	#是用于spring应用
+	-->
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcurl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+	</bean>
+	
+	<!-- 建立一个jdbcTemplate连接 -->
+	<bean id="jdbcTemplate"  class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+	
+	<!-- 建立一个带有具名参数支持的jdbcTemplate -->
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+	
+</beans>

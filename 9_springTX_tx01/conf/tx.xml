@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+	<!-- 扫描注解 -->
+	<context:component-scan base-package="com.spring"></context:component-scan>
+	
+	<!-- 连接外部配置文件 -->
+	<context:property-placeholder location="classpath:jdbcconfig.properties"/>
+
+	<!-- 连接数据库 -->
+	<bean id="pooldataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcurl}"></property>
+		<property name="driverClass" value="${jdbc.driverclass}"></property>
+	</bean>
+	
+	
+	<!-- 建立jdbcTemplate -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="pooldataSource"></property>
+	</bean>
+	
+	<!-- 进行事务控制 -->
+	<!-- 1、配置事务管理器（面向切面编程）让其能够进行事务控制 
+		所以需要导如进行界面编程的jar包
+		spring-aop-4.0.0.RELEASE.jar
+		com.springsource.net.sf.cglib-2.2.0.jar
+		com.springsource.org.aopalliance-1.0.0.jar
+		com.springsource.org.aspectj.weaver-1.6.8.RELEASE.jar
+		
+		优点：节省平常进行事务控制时书写的代码量，进行事务控制时，若一个事务执行过程中有出错，
+		则其他操作不会修改，保持事务的原子性
+	-->
+	<bean id="dataSourceTransactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 2、控制住数据源 -->
+		<property name="dataSource" ref="pooldataSource"></property>
+	</bean>
+	<!-- 3、开启基于注解的事务控制 -->	
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+	<!-- 4、给方法增加事务控制，添加相应的注解-->
+	
+</beans>
