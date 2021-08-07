@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+<!-- 	<classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />-->
+	<!-- targetRuntime生成的代码的复杂度，MyBatis3复杂版 MyBatis3Simple简单版-->
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<!-- jdbcConnection指导连接到哪一个数据库 -->
+		<jdbcConnection 
+			driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/mybatistest_01" 
+			userId="root"
+			password="ADMIN">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- javaModelGenerator生成pojo
+			targetPackage生成的pojo放置在哪个包下
+			targetProject放在哪个工程下
+			 -->
+		<javaModelGenerator targetPackage="com.gyg.beans"
+			targetProject=".\src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- sqlMapGenerator：sql映射文件生成器，指定xml生成的位置 -->
+		<sqlMapGenerator targetPackage="com.gyg.dao"
+			targetProject=".\conf">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- javaClientGenerator：生成dao接口 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.gyg.dao" 
+			targetProject=".\src">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- table指定要逆向生成哪张表 
+		tableName="ALLTYPES"对应数据库哪张表
+		domainObjectName="Customer"这个表对象的对象的名字
+		-->
+		<table tableName="t_cat" domainObjectName="Cat"></table>
+		<table tableName="t_employee" domainObjectName="Employee"></table>
+		<table tableName="t_teacher" domainObjectName="Teacher"></table>
+		
+	</context>
+</generatorConfiguration>
