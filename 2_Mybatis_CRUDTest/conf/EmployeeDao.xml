@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.EmployeeDao">
+
+	<!-- 增加员工 public int insertEmployee(Employee employee); -->
+	<insert id="insertEmployee">
+		INSERT INTO t_employee(empName,email,gender)
+		VALUES(#{empName}, #{email}, #{gender})
+	</insert>
+
+	<!-- 按照ID删除员工 public boolean deleteEmployee(Integer id); -->
+	<delete id="deleteEmployee">
+		DELETE FROM t_employee WHERE id=#{id}
+	</delete>
+
+	<!-- 修改员工信息 public int updateEmployee(Employee employee); -->
+	<update id="updateEmployee">
+		UPDATE t_employee SET
+		empName=#{empName},gender=#{gender},email=#{email} WHERE id=#{id}
+	</update>
+
+	<!-- 按照id查找员工 public Employee getEmployeeByID(Integer id); -->
+	<select id="getEmployeeByID" resultType="com.gyg.beans.Employee">
+		SELECT * FROM t_employee
+		WHERE id=#{id}
+	</select>
+
+</mapper>
