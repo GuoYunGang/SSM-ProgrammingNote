@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.TeacherDao">
+	<!-- 使用二级缓存 -->
+	<!-- <cache></cache> -->
+	<resultMap type="com.gyg.beans.Teacher" id="myTeacher01">
+		<id property="id" column="id" />
+		<result property="name" column="teacherName" />
+		<result property="course" column="class_name" />
+		<result property="address" column="address" />
+		<result property="birth" column="birth_date" />
+	</resultMap>
+	
+	<!-- 根据id查询teacher
+	public Teacher getTeacherById(Integer id); -->
+	<select id="getTeacherById" resultMap="myTeacher01">
+		SELECT * FROM t_teacher WHERE id=#{id}
+	</select>
+	
+	
+
+</mapper>
