@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.TeacherDao">
+	<!-- 使用二级缓存 -->
+	<cache></cache>
+	<resultMap type="com.gyg.beans.Teacher" id="myTeacher01">
+		<id property="id" column="id" />
+		<result property="name" column="teacherName" />
+		<result property="course" column="class_name" />
+		<result property="address" column="address" />
+		<result property="birth" column="birth_date" />
+	</resultMap>
+
+	<!-- // 根据id查询老师 public Teacher getTeacherByID(Integer id); -->
+	<select id="getTeacherByID" resultMap="myTeacher01">
+		SELECT * FROM t_teacher
+		WHERE id=#{id}
+	</select>
+
+
+
+	<!-- 按照已经有的条件动态查询 public List<Teacher> getTeacherByCondition(Teacher teacher); -->
+	<select id="getTeacherByCondition" resultMap="myTeacher01">
+		SELECT * FROM t_teacher
+		<!-- where标签帮助自动取出未加的条件,缺陷：但是只能去除前面的and，所以and连接符应该写在前面 -->
+		<!-- trim截取字符串 
+		prefix="" 前缀，为我们下面的sql整体添加一个sql；
+		prefixOverrides="" 取出整体字符串前面多余的字符；
+		suffix="" 后缀，为整体添加一个后缀
+		suffixOverrides="" 后面哪个多了可以去掉-->
+		<trim prefix="where" prefixOverrides="and" suffixOverrides="and">
+			<!-- <if test="">编写判断条件，取出javabean中的属性值，并判断其是否为null -->
+			<if test="id!=null">
+				id > #{id} and
+			</if>
+			<!-- 对于连接条件中间使用and或者or 或借用OGNL表达式 -->
+			<if test="name!=null and !name.equals('')">
+				teacherName like #{name} and
+			</if>
+			<if test="birth!=null">
+				birth_date &lt; #{birth}
+			</if>
+		</trim>
+
+	</select>
+	
+	<!-- // 传入一个list集合，其中放入要查询的id进行查询
+	public List<Teacher> getTeacherByIdIn(List<Integer> list);
+	 -->
+	 <select id="getTeacherByIdIn" resultMap="myTeacher01">
+	 	SELECT * FROM t_teacher WHERE id IN 
+	 	<!-- 遍历传入的数组或列表
+	 	collection=""要遍历的元素名；
+		item=""返回元素；
+	 	open=""起始连接；
+	 	close=""结束连接；
+	 	separator=""连接分隔符
+	 	 -->
+	 	<foreach collection="list" item="id_item" open="(" close=")" separator=",">
+	 		#{id_item}
+	 	</foreach>
+	 </select>
+	 
+	 
+	 <!-- // 选择查询
+	public List<Teacher> getTeacherByConditionChoose(Teacher teacher); -->
+	<select id="getTeacherByConditionChoose" resultMap="myTeacher01">
+		SELECT * FROM t_teacher
+		<where>
+			<!-- 选择查询，当含有某一个参数的时候，就只使用该参数查询，否则使用其他参数查询 -->
+			<choose>
+				<when test="id!=null">id=#{id}</when>
+				<when test="name!=null and !name.equals('')">teacherName = #{name}</when>
+				<when test="birth != null">birth_date = #{birth}</when>
+				<!-- 如果上述都不符合，则使用下面的查询 -->
+				<otherwise>
+					<!-- 查出所有 -->
+					1=1
+				</otherwise>
+			</choose>
+		</where>
+	</select>
+
+	<!--更新 public int updateTeacher(Teacher teacher); -->
+	<update id="updateTeacher">
+		UPDATE t_teacher 
+		<!-- 将修改内容写入到set中可以避免逗号等连接符的错误 -->
+		<set>
+			<if test="name!=null and !name.equals('')">teacherName=#{name}</if>
+			<if test="course!=null and !course.equals('')">class_name=#{course}</if>
+			<if test="address!=null and !address.equals('')">address=#{address}</if>
+			<if test="birth!=null and !birth.equals('')">birth_date=#{birth}</if>
+			<where>
+				id=#{id}
+			</where>
+		</set>
+	</update>
+</mapper>

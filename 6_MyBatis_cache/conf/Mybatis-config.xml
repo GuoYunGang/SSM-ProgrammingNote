@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 引入外部配置文件 -->
+	<properties resource="jdbc.properties"></properties>
+	<settings>
+		<!-- 开启延迟加载开关 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 开启属性按需加载 -->
+		<setting name="aggressiveLazyLoading" value="false" />
+		<!-- 开启全局缓存开关 -->
+		<setting name="cacheEnabled" value="true"/>
+		
+	</settings>
+	<!-- 配置数据库连接驱动 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"></transactionManager>
+			<dataSource type="POOLED">
+				<property name="driver" value="${driverclass}" />
+				<property name="url" value="${jdbcurl}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- 连接外部接口文件 -->
+	<mappers>
+		<!-- 批量注册 -->
+		<package name="com.gyg.dao" />
+	</mappers>
+</configuration>
