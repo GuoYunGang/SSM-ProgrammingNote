@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.KeyDao">
+
+	<!-- // 根据id查询key public Key getKeyByID(Integer id); -->
+	<select id="getKeyByID" resultMap="mykey">
+		SELECT k.id
+		kid,k.keyName,k.lockId,l.id lid,l.LockName
+		FROM t_key k LEFT JOIN
+		t_lock l ON k.lockId=l.id WHERE k.id=#{id}
+	</select>
+
+	<!-- 自定义封装规则 -->
+	<!-- <resultMap type="com.gyg.beans.Key" id="mykey"> <id property="id" column="kid"/> 
+		<result property="keyName" column="keyName"/> <result property="lock.id" 
+		column="lid"/> <result property="lock.lockName" column="lockName"/> </resultMap> -->
+
+	<!-- 自定义封装规则 association -->
+	<resultMap type="com.gyg.beans.Key" id="mykey">
+		<id property="id" column="kid" />
+		<result property="keyName" column="keyName" />
+		<!-- association 接下来封装的是一个对象，单独给这个对象进行自定义封装规则 javaType，指定这个属性的类型 -->
+		<association property="lock" javaType="com.gyg.beans.Lock">
+			<id property="id" column="lid" />
+			<result property="lockName" column="lockName" />
+		</association>
+	</resultMap>
+
+	<!-- 分布式查询 -->
+	<!-- // 根据id查询key的简单方法 public Key getKeyByIDSimple(Integer id); -->
+	<select id="getKeyByIDSimple" resultMap="mykey2">
+		SELECT * FROM t_key
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 指定分布式查询的规则 -->
+	<resultMap type="com.gyg.beans.Key" id="mykey2">
+		<id property="id" column="id"/>
+		<result property="keyName" column="keyName"/>
+		<!-- 设置查询对象 在其中执行查询语句，property=""指定返回对象，select=""指定查询语句 column=""指定使用的查询参数-->
+		<!-- fetchType="lazy"设置懒加载 -->
+		<association property="lock" select="com.gyg.dao.LockDao.getLockByIDSimple" 
+		column="lockId" >
+			<!-- <id property="id" column="id"/>
+			<result property="lockName" column="lockName"/> -->
+		</association>
+	</resultMap>
+
+</mapper>

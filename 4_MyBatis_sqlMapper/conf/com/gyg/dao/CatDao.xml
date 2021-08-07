@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.CatDao">
+	
+	<!-- 根据ID获取cat
+	public Cat getCatByID(Integer id);
+	resultType="com.gyg.beans.Cat" 使用默认规则，属性列名一一对应
+	resultMap="mycat" 查出数据封装结果的时候使用mycat自定义的规则
+	 -->
+	<select id="getCatByID" resultMap="mycat">
+		SELECT * FROM t_cat WHERE id=#{id}
+	</select>
+	
+	<!-- 自定义结果集，自己定义每一列数据和javabean的映射规则 type=“”：指定位哪一个javabean自定义封装规则，写全类名 id=“”：唯一标识，让别名在后面引用 -->
+	<resultMap type="com.gyg.beans.Cat" id="mycat">
+		<!-- 指定哪一列是主键列 -->
+		<!-- column=“id”指定哪一列是主键列
+			property=“”，指定cat的哪个属性封装id这一列数据
+		 -->
+		 <id column="id" property="id"/>
+		<!-- 普通列 -->
+		<result property="name" column="cName"/>
+		<result property="age" column="cAge"/>
+		<result property="gender" column="cGender"/>
+	</resultMap>
+</mapper>
+	

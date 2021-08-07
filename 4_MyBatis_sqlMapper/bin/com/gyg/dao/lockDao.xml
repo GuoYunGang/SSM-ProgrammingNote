@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.LockDao">
+
+	<!-- // 查询锁，同时查出该锁对应的钥匙 public Lock getLockByID(Integer id); -->
+	<select id="getLockByID" resultMap="mylock">
+		SELECT k.id kid,k.keyName,k.lockId,l.id
+		lid,l.LockName FROM t_lock l LEFT
+		JOIN t_key k ON k.lockId=l.id WHERE
+		L.id=3
+	</select>
+
+	<resultMap type="com.gyg.beans.Lock" id="mylock">
+		<id property="id" column="lid"/>
+		<result property="lockName" column="LockName"/>
+		<!-- 专门用来定义集合属性的封装 
+		property="keys"
+		ofType=""指定集合里面元素的类型
+		-->
+		<collection property="keys" ofType="com.gyg.beans.Key">
+			<id property="id" column="kid"/>
+			<result property="keyName" column="keyName"/>
+			
+		</collection>
+	</resultMap>
+	
+	<!-- //	按照id找锁的简单方法
+	public Lock getLockByIDSimple(Integer id);
+	 -->
+	 <select id="getLockByIDSimple" resultType="com.gyg.beans.Lock">
+	 	SELECT * FROM t_lock WHERE id=#{id}
+	 </select>
+</mapper>

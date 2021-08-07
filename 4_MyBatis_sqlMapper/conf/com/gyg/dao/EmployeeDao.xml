@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyg.dao.EmployeeDao">
+
+	<!-- // 增加员工 public int insertEmployee(Employee employee); -->
+	<!-- 让mybatis自动的将自增id赋值给传入的employee对象的id属性 useGeneratedKeys="true" keyProperty="id"将刚才自增的id赋值给哪个属性 -->
+	<insert id="insertEmployee" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_employee(empName,email,gender)
+		VALUES(#{empName},
+		#{email},
+		#{gender})
+	</insert>
+
+	<!-- // 在未设置自增ID的前提下，增加员工 public int insertEmployee(Employee employee); -->
+	<!-- 首先获取到一个插入到数据库中的数据的ID -->
+	<insert id="insertEmployee2" useGeneratedKeys="true"
+		keyProperty="id">
+		<!-- 获取到当前最大的ID，然后+1来实现自增 -->
+		<selectKey resultType="integer" keyProperty="id">
+			SELECT MAX(id)+1
+			FROM t_employee
+		</selectKey>
+		INSERT INTO t_employee(id,empName,email,gender)
+		VALUES(#{id},#{empName},#{email},#{gender})
+	</insert>
+
+	<!-- // 按照ID删除员工 public boolean deleteEmployee(Integer id); -->
+	<delete id="deleteEmployee">
+		DELETE FROM t_employee WHERE id=#{id}
+	</delete>
+
+	<!-- // 修改员工信息 public int updateEmployee(Employee employee); -->
+	<update id="updateEmployee">
+		UPDATE t_employee SET
+		empName=#{empName},gender=#{gender},email=#{email}
+		WHERE id=#{id}
+	</update>
+
+	<!-- // 按照id查找员工 public Employee getEmployeeByID(Integer id); -->
+	<select id="getEmployeeByID" resultType="com.gyg.beans.Employee">
+		SELECT * FROM t_employee
+		WHERE id=#{id}
+	</select>
+
+	<!-- // 按照id和empName查找员工 public Employee getEmployeeByIDAndName(@Param("id") 
+		Integer id,@Param("empName") String empName); -->
+	<select id="getEmployeeByIDAndName" resultType="com.gyg.beans.Employee">
+		SELECT * FROM
+		t_employee
+		WHERE id=#{id} AND empname=#{empName}
+	</select>
+
+	<!-- // 按照id和empName查找用户，但是向mybatis中传入的对象是封装好的map public Employee getEmployeeByIDAndNameOnMap(Map<String, 
+		Object> map); -->
+	<select id="getEmployeeByIDAndNameOnMap" resultType="com.gyg.beans.Employee">
+		SELECT *
+		FROM t_employee
+		WHERE id=#{id} AND empname=#{empName}
+	</select>
+
+	<!-- 如果返回的是集合，写的是集合里面元素的类型 -->
+	<!-- // 查询所有的员工信息 public List<Employee> getAllEmps(); -->
+	<select id="getAllEmps" resultType="com.gyg.beans.Employee">
+		SELECT * FROM t_employee
+	</select>
+
+	<!-- // 查询单条记录封装map public Map<String, Object> getEmployeeByIDReturnMap(Integer 
+		id); -->
+	<select id="getEmployeeByIDReturnMap" resultType="map">
+		SELECT * FROM
+		t_employee WHERE id=#{id}
+	</select>
+
+	<!-- // 查询所有记录封装成map，key是主键，value是返回的对象 public Map<Integer, Employee> getAllEmployeeReturnMap(); -->
+	<select id="getAllEmployeeReturnMap" resultType="com.gyg.beans.Employee">
+		SELECT * FROM
+		t_employee
+	</select>
+
+	
+</mapper>
+	
+
+
+	

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 引入外部配置文件 resource表示引用类路径下的文件 url表示引用外部文件或网络文件 -->
+	<properties resource="jdbc.properties"></properties>
+	<!-- 具体使用哪一个数据环境 指定ID名称 -->
+	<environments default="development">
+		<!-- 配置一个新的数据环境 -->
+		<environment id="testEnv">
+			<!-- transactionManager事务管理器，看使用哪一种事务 -->
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<!-- ${}取出配置文件中的值 -->
+				<property name="driver" value="${driverclass}" />
+				<property name="url" value="${jdbcurl}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+
+
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<!-- ${}取出配置文件中的值 -->
+				<property name="driver" value="${driverclass}" />
+				<property name="url" value="${jdbcurl}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- settings:这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。 下表描述了设置中各项设置的含义、默认值等 -->
+	<!-- <settings> 开启自动识别驼峰命名 <setting name="mapUnderscoreToCamelCase" value="true" 
+		/> </settings> -->
+
+
+	<!-- 类型别名，为常用类型起别名，如javabean 这样配置文件中就可以使用别名了（不区分大小写） -->
+	<!-- <typeAliases> 如果不给默认是类名，alias="" 可以指定 <typeAlias type="com.gyg.beans.Employee" 
+		alias="emp"/> </typeAliases> -->
+
+	<!-- mybatis用来做数据库移植 -->
+	<databaseIdProvider type="DB_VENDOR">
+		<!-- name表示数据库厂商标识，value给这个厂商起一个好用的名字， -->
+		<property name="MYSQL" value="mysql"></property>
+		<property name="SQL Server" value="sqlserver"></property>
+		<property name="Oracle" value="ora"></property>
+	</databaseIdProvider>
+	
+	
+	<!-- 写好的sql映射文件需要使用mappers注册进来 -->
+	<!-- 引入实现对应接口的配置文件 -->
+	<mappers>
+		<!-- <mapper resource="EmployeeDao.xml" /> -->
+		<!-- 注解版本的dao -->
+		<mapper class="com.gyg.dao.EmployeeDaoAnnotation" />
+		
+		<!-- 批量注册，直接写包名，批量注册该包下的文件 -->
+		<package name="com.gyg.dao"/>
+	</mappers>
+</configuration>
